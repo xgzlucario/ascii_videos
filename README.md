@@ -26,8 +26,8 @@ fmt.Println(string(bytes))
 
 ![img](https://i0.hdslb.com/bfs/new_dyn/cd115a1ab8a69f121ac1ab740f45b12a173469252.png@1709w.webp)
 
-![image-20220815211000843](C:\Users\lucario\AppData\Roaming\Typora\typora-user-images\image-20220815211000843.png)
+![image-20220815211000843](https://s3.bmp.ovh/imgs/2022/08/15/87351e1bf19fb84e.png)
 
 ![img](https://i0.hdslb.com/bfs/new_dyn/615c8071c1c4beba47e6c7971b8561e4470962000.jpg@1709w.webp)
 
-![image-20220815210749832](C:\Users\lucario\AppData\Roaming\Typora\typora-user-images\image-20220815210749832.png)
+![image-20220815210749832](https://s3.bmp.ovh/imgs/2022/08/15/0ea58718057c4a2a.png)
