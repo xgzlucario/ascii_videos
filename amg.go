@@ -16,22 +16,32 @@ import (
 )
 
 var (
-	// ascii character
-	ramp string
+	// ascii grayscale rank
+	ramp = " .,-=+CNMGB@"
 
 	// maybe you should change reverse
-	Reverse = true
+	Reverse = false
 
 	// scale
-	scaleX, scaleY = 5, 2
+	scaleX, scaleY = 6, 2
 )
 
 func init() {
 	if Reverse {
-		ramp = " .-=+O#@"
-	} else {
-		ramp = "@#O+=-. "
+		ramp = reverseString(ramp)
 	}
+}
+
+func reverseString(str string) string {
+	s := []rune(str)
+	l, r := 0, len(s)-1
+
+	for l < r {
+		s[l], s[r] = s[r], s[l]
+		l++
+		r--
+	}
+	return string(s)
 }
 
 func LoadImage(path string) (image.Image, error) {
@@ -80,11 +90,10 @@ func image2Ascii(img image.Image) []byte {
 	for y := 0; y < max.Y; y += scaleX {
 		for x := 0; x < max.X; x += scaleY {
 			c := avgPixel(img, x, y, scaleX, scaleY)
-			buf.WriteString(string(ramp[len(ramp)*c/65536]))
+			buf.WriteByte(ramp[len(ramp)*c/65536])
 		}
 		buf.WriteByte('\n')
 	}
-	buf.WriteByte('\n')
 
 	return buf.Bytes()
 }
@@ -132,7 +141,7 @@ func avgPixel(img image.Image, x, y, w, h int) int {
 }
 
 func main() {
-	img, err := LoadImage("https://i0.hdslb.com/bfs/new_dyn/cd115a1ab8a69f121ac1ab740f45b12a173469252.png")
+	img, err := LoadImage("https://i0.hdslb.com/bfs/new_dyn/615c8071c1c4beba47e6c7971b8561e4470962000.jpg")
 	if err != nil {
 		panic(err)
 	}

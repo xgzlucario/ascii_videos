@@ -1,10 +1,38 @@
 # ascii_videos
 
-A project that converts video to ascii characters and print them in the terminal
+A project that converts video to ascii characters and print them in the terminal.
+
+## Environment
+
+Before start, make sure you have **ffmpeg** installed.
+
+```bash
+$ ffmpeg
+ffmpeg version 4.2.7-0ubuntu0.1 Copyright (c) 2000-2022 the FFmpeg developers
+  built with gcc 9 (Ubuntu 9.4.0-1ubuntu1~20.04.1)
+...
+```
+
+If not, this is a sample installation on Ubuntu:
+
+```bash
+$ sudo apt install ffmpeg
+```
+
+Or compile by source code:
+
+```bash
+$ wget http://www.ffmpeg.org/releases/ffmpeg-5.1.tar.gz
+$ tar -zxvf ffmpeg-5.1.tar.gz
+$ cd ffmpeg-3.1
+$ ./configure --prefix=/usr/local/ffmpeg
+$ make
+$ make install
+```
 
 ## Example
 
-load a image from remote or local path, convert rgb to gray matrix,  and calculate ascii characters to instead.
+Load a image from remote or local path, convert rgb to gray matrix,  and calculate ascii characters to instead.
 
 ```go
 // load image
