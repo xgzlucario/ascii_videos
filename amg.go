@@ -23,7 +23,7 @@ var (
 	Reverse = true
 
 	// scale
-	scaleX, scaleY = 6, 2
+	scaleX, scaleY = 5, 2
 )
 
 func init() {
@@ -132,7 +132,7 @@ func avgPixel(img image.Image, x, y, w, h int) int {
 }
 
 func main() {
-	img, err := LoadImage("https://i0.hdslb.com/bfs/new_dyn/615c8071c1c4beba47e6c7971b8561e4470962000.jpg")
+	img, err := LoadImage("https://i0.hdslb.com/bfs/new_dyn/cd115a1ab8a69f121ac1ab740f45b12a173469252.png")
 	if err != nil {
 		panic(err)
 	}
