@@ -71,14 +71,14 @@ fmt.Println(string(bytes))
 Use project [The fastest Bilibili video downloader](https://github.com/sodaling/FastestBilibiliDownloader) to download bilibili videos. clone project and use **go build** to make a binary file in `./cmd` path. download videos in `./download` path.
 
 ```bash
-$ ./cmd/download_bili 
+$ ./cmd/download_bili_videos
 欢迎使用B站视频下载器 v1.0.1
 支持以下几种格式的输入：
 ·  https://www.bilibili.com/video/旧版的av号/ | av号 是以`av`开头的一串数字
 ·  https://www.bilibili.com/video/新版的BV号/ | BV号 是以`BV`开头的一串字符
 ·  https://space.bilibili.com/UP主的ID/       | UP主的ID 是一串数字
 
-请输入想要下载的视频网址/up主个人主页网址: https://www.bilibili.com/video/BV1pS4y1x7RR?spm_id_from=444.41.list.card_archive.click&vd_source=f3b2b1df0939738ef80874a785d80ac5
+请输入想要下载的视频网址/up主个人主页网址: https://www.bilibili.com/video/BV1pS4y1x7RR
 2022/08/16 22:42:27 开始下载...
 即将开始下载： 【4K60FPS】Fool's Garden《Lemon Tree》经典现场！英语老师推荐曲目！
 ```

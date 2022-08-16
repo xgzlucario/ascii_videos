@@ -131,13 +131,6 @@ func avgPixel(img image.Image, x, y, w, h int) int {
 	return sum / cnt
 }
 
-// clear terminal
-func clear() {
-	cmd := exec.Command("clear")
-	cmd.Stdout = os.Stdout
-	cmd.Run()
-}
-
 func main() {
 	// img, err := LoadImage("https://i0.hdslb.com/bfs/new_dyn/615c8071c1c4beba47e6c7971b8561e4470962000.jpg")
 	// if err != nil {
@@ -160,12 +153,15 @@ func main() {
 
 // play ascii video on console
 func Play() {
+	cmd := exec.Command("clear")
+	cmd.Stdout = os.Stdout
+
 	for i := 0; ; i++ {
 		file, err := os.ReadFile(fmt.Sprintf("frames/frame:%d", i))
 		if err != nil {
 			break
 		}
-		// clear()
-		fmt.Println(string(file))
+		cmd.Run()
+		os.Stdout.Write(file)
 	}
 }
