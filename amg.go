@@ -10,20 +10,19 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-	"time"
 
 	ffmpeg "github.com/u2takey/ffmpeg-go"
 )
 
 var (
-	// ascii grayscale rank
+	// ascii grayscale rank, If you find a better way to combine grayscale values than this, submit plz!
 	ramp = " .,-=+CNMGB@"
 
-	// maybe you should change reverse
+	// specify Reverse to change contrast
 	Reverse = false
 
-	// scale
-	scaleX, scaleY = 6, 2
+	// specify ScaleX and ScaleY to resize the pictures
+	ScaleX, ScaleY = 3, 1
 )
 
 func init() {
@@ -44,35 +43,29 @@ func reverseString(str string) string {
 	return string(s)
 }
 
+// load image
 func LoadImage(path string) (image.Image, error) {
 	if path[0:4] == "http" {
-		return getRemoteImg(path)
+		// http get
+		res, err := http.Get(path)
+		if err != nil {
+			return nil, err
+		}
+		defer res.Body.Close()
+
+		image, _, err := image.Decode(res.Body)
+		return image, err
+
 	} else {
-		return getLocalImg(path)
+		// local path
+		f, err := os.Open(path)
+		if err != nil {
+			return nil, err
+		}
+		defer f.Close()
+		image, _, err := image.Decode(f)
+		return image, err
 	}
-}
-
-// get image from http
-func getRemoteImg(url string) (image.Image, error) {
-	res, err := http.Get(url)
-	if err != nil {
-		return nil, err
-	}
-	defer res.Body.Close()
-
-	image, _, err := image.Decode(res.Body)
-	return image, err
-}
-
-// get image from local
-func getLocalImg(filePath string) (image.Image, error) {
-	f, err := os.Open(filePath)
-	if err != nil {
-		return nil, err
-	}
-	defer f.Close()
-	image, _, err := image.Decode(f)
-	return image, err
 }
 
 // rgb to gray
@@ -84,17 +77,15 @@ func rgb2gray(c color.Color) int {
 // image to ascii character
 func image2Ascii(img image.Image) []byte {
 	buf := bytes.Buffer{}
-
 	max := img.Bounds().Max
 
-	for y := 0; y < max.Y; y += scaleX {
-		for x := 0; x < max.X; x += scaleY {
-			c := avgPixel(img, x, y, scaleX, scaleY)
+	for y := 0; y < max.Y; y += ScaleX {
+		for x := 0; x < max.X; x += ScaleY {
+			c := avgPixel(img, x, y, ScaleX, ScaleY)
 			buf.WriteByte(ramp[len(ramp)*c/65536])
 		}
 		buf.WriteByte('\n')
 	}
-
 	return buf.Bytes()
 }
 
@@ -115,7 +106,7 @@ func SaveFrameAsAscii(path string, index int) error {
 	}
 
 	// img to ascii
-	file, err := os.OpenFile(fmt.Sprintf("frames/%s:%d", path, index), os.O_RDWR|os.O_CREATE, 0755)
+	file, err := os.OpenFile(fmt.Sprintf("frames/frame:%d", index), os.O_RDWR|os.O_CREATE, 0755)
 	if err != nil {
 		return err
 	}
@@ -125,7 +116,7 @@ func SaveFrameAsAscii(path string, index int) error {
 	file.Write(bytes)
 	file.Close()
 
-	fmt.Printf("save video:%s frame:%d as file success\n", path, index)
+	fmt.Printf("save video frame:%d as file success\n", index)
 	return nil
 }
 
@@ -140,46 +131,41 @@ func avgPixel(img image.Image, x, y, w, h int) int {
 	return sum / cnt
 }
 
-func main() {
-	img, err := LoadImage("https://i0.hdslb.com/bfs/new_dyn/615c8071c1c4beba47e6c7971b8561e4470962000.jpg")
-	if err != nil {
-		panic(err)
-	}
-
-	bytes := image2Ascii(img)
-
+// clear terminal
+func clear() {
 	cmd := exec.Command("clear")
 	cmd.Stdout = os.Stdout
 	cmd.Run()
+}
 
-	fmt.Println(string(bytes))
-
-	// for i := 0; ; i += 5 {
-	// 	go SaveFrameAsAscii("video.mp4", i)
-	// 	go SaveFrameAsAscii("video.mp4", i+1)
-	// 	go SaveFrameAsAscii("video.mp4", i+2)
-	// 	go SaveFrameAsAscii("video.mp4", i+3)
-	// 	go SaveFrameAsAscii("video.mp4", i+4)
-	// 	time.Sleep(time.Second / 2)
+func main() {
+	// img, err := LoadImage("https://i0.hdslb.com/bfs/new_dyn/615c8071c1c4beba47e6c7971b8561e4470962000.jpg")
+	// if err != nil {
+	// 	panic(err)
 	// }
 
-	// Play("video.mp4")
+	// bytes := image2Ascii(img)
+
+	// fmt.Println(string(bytes))
+
+	// file := "download/test1.flv"
+	// for i := 0; ; i++ {
+	// 	if err := SaveFrameAsAscii(file, i); err != nil {
+	// 		break
+	// 	}
+	// }
+	// fmt.Println("ascii videos complete")
+	Play()
 }
 
 // play ascii video on console
-func Play(path string) {
+func Play() {
 	for i := 0; ; i++ {
-		file, err := os.ReadFile(fmt.Sprintf("frames/%s:%d", path, i))
+		file, err := os.ReadFile(fmt.Sprintf("frames/frame:%d", i))
 		if err != nil {
 			break
 		}
-
-		time.Sleep(time.Second / 30)
-
-		cmd := exec.Command("clear")
-		cmd.Stdout = os.Stdout
-		cmd.Run()
-
+		// clear()
 		fmt.Println(string(file))
 	}
 }
